@@ -1,0 +1,20 @@
+import os
+import discord
+
+token = os.environ.get('TOKEN','')
+
+postgres = os.environ.get('DATABASE_URL','')
+
+bot_description = ''
+
+owner = ''
+
+prefixes = ['']
+
+extensions = ['']
+
+activity = discord.Game(name='')
+
+name = '      '
+
+embed_color = ''
