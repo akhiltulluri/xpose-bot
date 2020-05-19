@@ -19,7 +19,11 @@ class HelpPaginator(Pages):
 
     def get_bot_page(self, page):
         cog, description, commands = self.entries[page - 1]
-        self.title = f'{cog} Commands'
+        inst = self.bot.get_cog(cog)
+        if hasattr(inst,'name'):
+            self.title = f'{inst.name} Commands'
+        else:
+            self.title = f'{cog} Commands'
         self.description = description
         return commands
 
@@ -128,15 +132,16 @@ class PaginatedHelpCommand(commands.HelpCommand):
             commands = sorted(commands, key=lambda c: c.name)
             if len(commands) == 0:
                 continue
-
+            if cog == 'Jishaku':
+                continue
             total += len(commands)
             actual_cog = bot.get_cog(cog)
             # get the description if it exists (and the cog is valid) or return Empty embed.
             description = (actual_cog and actual_cog.description) or discord.Embed.Empty
             nested_pages.extend((cog, description, commands[i:i + per_page]) for i in range(0, len(commands), per_page))
-
+        ordered_pages = sorted(nested_pages, key=lambda x: bot.get_cog(x[0]).position)
         # a value of 1 forces the pagination session
-        pages = HelpPaginator(self, self.context, nested_pages, per_page=1)
+        pages = HelpPaginator(self, self.context,ordered_pages, per_page=1)
 
         # swap the get_page implementation to work with our nested pages.
         pages.get_page = pages.get_bot_page
@@ -185,6 +190,7 @@ class General(commands.Cog):
         self.old_help_command = bot.help_command
         bot.help_command = PaginatedHelpCommand()
         bot.help_command.cog = self
+        self.position = 4
 
     def cog_unload(self):
         self.bot.help_command = self.old_help_command

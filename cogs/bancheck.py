@@ -1,7 +1,8 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands,tasks
 
 from dateutil.parser import parse
+import json
 
 import config
 from .utils.paginator import EmbedPages
@@ -9,17 +10,27 @@ from .utils.paginator import EmbedPages
 class BanCheck(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
+        self.name = 'WCL BanCheck'
+        self.position = 1
         self.session = bot.session
-        self.cbanlist_endpoint = 'https://sheets.googleapis.com/v4/spreadsheets/1qckELKFEYecbyGeDqRqItjSKm02ADpKfhkK1FiRbQ-c/values/B6:G?key=AIzaSyBs-oGIB9K9HenlLvL54lWurKyD9GokfAU'
-        self.pbanlist_endpoint = 'https://sheets.googleapis.com/v4/spreadsheets/1qckELKFEYecbyGeDqRqItjSKm02ADpKfhkK1FiRbQ-c/values/Banned%20Players!B6:H?key=AIzaSyBs-oGIB9K9HenlLvL54lWurKyD9GokfAU'
+        self.cbanlist_endpoint_wcl = 'https://sheets.googleapis.com/v4/spreadsheets/1qckELKFEYecbyGeDqRqItjSKm02ADpKfhkK1FiRbQ-c/values/B5:G?key=AIzaSyBs-oGIB9K9HenlLvL54lWurKyD9GokfAU'
+        self.pbanlist_endpoint_wcl = 'https://sheets.googleapis.com/v4/spreadsheets/1qckELKFEYecbyGeDqRqItjSKm02ADpKfhkK1FiRbQ-c/values/Banned%20Players!B5:H?key=AIzaSyBs-oGIB9K9HenlLvL54lWurKyD9GokfAU'
+        self.cbanlist_endpoint_cwl = ''
+        self.pbanlist_endpoint_cwl = ''
+        self.cbanlist_endpoint_mlcw = 'https://sheets.googleapis.com/v4/spreadsheets/1QWEN1i5nDmfeHzpnQLpJDIMU9vUv2c_NT43PN9csF2Q/values/A3:D?key=AIzaSyBs-oGIB9K9HenlLvL54lWurKyD9GokfAU'
+        self.pbanlist_endpoint_mlcw = 'https://sheets.googleapis.com/v4/spreadsheets/1QWEN1i5nDmfeHzpnQLpJDIMU9vUv2c_NT43PN9csF2Q/values/Banned%20Players!A3:E?key=AIzaSyBs-oGIB9K9HenlLvL54lWurKyD9GokfAU'
         self.chistory_endpoint = 'https://api.clashofstats.com/players/' 
         self.cmembers_endpoint = 'https://api.clashofstats.com/clans/'
-        self._task = self.bot.loop.create_task(self.initialize())
+        self.initialize.start()
 
-
+    @tasks.loop(minutes=5)
     async def initialize(self):
-        self.clan_ban_list = await (await self.session.get(self.cbanlist_endpoint)).json()
-        self.player_ban_list = await (await self.session.get(self.pbanlist_endpoint)).json()
+        self.clan_ban_list_wcl = await (await self.session.get(self.cbanlist_endpoint_wcl)).json()
+        self.player_ban_list_wcl = await (await self.session.get(self.pbanlist_endpoint_wcl)).json()
+        self.clan_ban_list_mlcw = await (await self.session.get(self.cbanlist_endpoint_mlcw)).json()
+        self.player_ban_list_mlcw = await (await self.session.get(self.cbanlist_endpoint_mlcw)).json()
+        #self.clan_ban_list_cwl = await (await self.session.get(self.cbanlist_endpoint_cwl)).json()
+        #self.player_ban_list_cwl = await (await self.session.get(self.cbanlist_endpoint_cwl)).json()
 
 
     async def get_clan_member_tags(self,clantag):
@@ -30,15 +41,22 @@ class BanCheck(commands.Cog):
         player_tags = [x['tag'] for x in clan_members]
         return player_tags
 
-    async def is_clan_banned(self,clantag):
+    async def is_clan_banned(self,clantag,league):
         """A coroutine to check if a clan is banned"""
-        clan_ban_list = self.clan_ban_list
+        print("this occured")
+        if league == 'wcl':
+            clan_ban_list = self.clan_ban_list_wcl
+        elif league == 'cwl':
+            clan_ban_list = self.clan_ban_list_cwl
+        elif league == 'mlcw':
+            clan_ban_list = self.clan_ban_list_mlcw
         banned_clans = [x for x in clan_ban_list['values']]
         banned_clan_tags = [y[1] for y in banned_clans]
+        print(f"{clantag in banned_clan_tags}")
         if not clantag in banned_clan_tags:
-            return False
+            return [],[]
         ind = banned_clan_tags.index(clantag)
-        return banned_clans[ind]
+        return self.match_length(banned_clans[0],banned_clans[ind])
 
     async def get_player_clan_history_tags(self,playertag):
         """A coroutine to get player clan history"""
@@ -72,48 +90,34 @@ class BanCheck(commands.Cog):
         resp = await (await self.session.get(self.chistory_endpoint+playertag)).json()
         return resp['name']
 
+    @staticmethod
+    def match_length(list1,list2):
+        length1 = len(list1)
+        length2 = len(list2)
+        diff = length1 - length2
+        for _ in range(diff):
+            list2.append('None')
+        return list1,list2
+            
 
-    async def is_player_banned(self,playertag):
-        """A coroutine to check if a player is banned"""
-        
-        player_ban_list = self.player_ban_list
-        banned_players = [x for x in player_ban_list['values']]
-        banned_player_tags = [y[1] for y in banned_players]
-        if not playertag in banned_player_tags:
-            return False
-        ind = banned_player_tags.index(playertag)
-        return banned_players[ind]
-
-    @commands.command()
-    async def cc(self,ctx,clantag):
-        val = await self.is_clan_banned(clantag)
-        clanname = await self.get_clan_name(clantag)
-        if not val:
-            return await ctx.send(f"Clan {clanname}[{clantag}] is not banned by WCL")
-        clan_name,clan_tag,ban_duration,date_added,ban_type,ban_reason = val
-        embed = discord.Embed(colour=config.embed_color,title=clan_name,description=f"Clan {clan_name} got banned by WCL on {date_added}\nReason: {ban_reason}\nBan Type: {ban_type}\nDuration: {ban_duration}")
-        await ctx.send(embed=embed)
-
-    @commands.command()
-    async def update(self,ctx):
-        await self.initialize()
-        await ctx.send(f"Successfully fetched latest ban list!")
-
-    @commands.command()
-    async def ps(self,ctx,playertag):
+    async def playerscan(self,playertag,league):
         playername = await self.get_player_name(playertag)
-        val = await self.is_player_banned(playertag)
+        keys,vals = await self.is_player_banned(playertag,league)
         past_clans = await self.get_player_clan_history_tags(playertag)
         visited_banned_clans = []
-        for tag in past_clans:
-            verify = await self.is_clan_banned(tag)
-            if verify:
-                visited_banned_clans.append(verify)
-        if visited_banned_clans is None:
-            return await ctx.send(f"Player {playername}[{playertag}] not Banned and found no banned clan in player clan history!")
         embeds = []
+        for tag in past_clans:
+            clan_keys,clan_values = await self.is_clan_banned(tag,league)
+            if clan_keys:
+                visited_banned_clans.append([clan_keys,clan_values,tag])
+        if not vals and visited_banned_clans is None:
+            emb = discord.Embed(title="Ban Check",description=f"Player {playername}[{playertag}] is not banned by {league.upper()} and found no banned clan in player clan history!",colour=config.embed_color)
+            return emb,embeds      
         for clan in visited_banned_clans:
-            clan_name,clan_tag,ban_duration,date_added,ban_type,ban_reason = clan
+            int_keys = clan[0]
+            int_vals = clan[1]
+            clan_tag = clan[2]
+            clan_name = await self.get_clan_name(clan_tag)
             js = await self.get_history_data(playertag,clan_tag)
             explain_visited = []
             for log in js:
@@ -124,46 +128,161 @@ class BanCheck(commands.Cog):
                 else:
                     inner_li = [log['type'],log['tag'],log['role'],log['start'],log['end'],log['duration']]
                 explain_visited.append(inner_li)
-            current_player_history_explanation = ''
+            current_player_history_explanation = f"Player {playername} visited the clan {clan_name} in the following intervals:\n"
+            i = 0
             for explanation in explain_visited:
+                i += 1
+                if i > 5:
+                    break
                 if len(explanation) == 5:
-                    on = parse(explanation[3])
-                    keyword = 'visited'
-                    start_dt = end_dt = f"{on.day}/{on.month}/{on.year}"
-                else:
-                    keyword = 'stayed in'
+                    start = end = parse(explanation[3])
+                    start_dt = end_dt = f"{start.day}/{start.month}/{start.year}"
+                else:                    
                     start = parse(explanation[3])
                     end = parse(explanation[4])
                     start_dt = f"{start.day}/{start.month}/{start.year}"
-                    end_dt = f"{end.day}/{end.month}/{end.year}"                    
-                current_player_history_explanation = current_player_history_explanation + f"Player {playername}[{playertag}] has {keyword} {clan_name}[{explanation[1]}] with role {explanation[2]} between {start_dt} and {end_dt}\n"
-            embed = discord.Embed(colour=config.embed_color,title=clan_name,description=f"Clan {clan_name} got banned by WCL on {date_added}\nReason: {ban_reason}\nBan Type: {ban_type}\nDuration: {ban_duration}\n\nInfo From Clash Of Stats:\n{current_player_history_explanation}")
+                    end_dt = f"{end.day}/{end.month}/{end.year}"                                   
+                current_player_history_explanation = current_player_history_explanation + f"**Role:** {explanation[2]} **Between:** {start_dt} and {end_dt}"
+                if end.day - start.day > 0:
+                    current_player_history_explanation = current_player_history_explanation + f" ({end.day - start.day})\n"
+                else:
+                    current_player_history_explanation = current_player_history_explanation + "\n"
+            description = f"Clan {clan_name} got **banned** by {league.upper()}.\n\n Details from their ban list:\n"
+            for i in range(len(int_keys)):
+                txt = f"**{int_keys[i]}**: {int_vals[i]}\n"
+                description = description + txt
+            description = description + f"\n\n**Info From Clash Of Stats:**\n\n{current_player_history_explanation}"
+            embed = discord.Embed(colour=config.embed_color,title=f"{clan_name}-{playername}",description=description)
             embeds.append(embed)
-        if not val:
+        if not vals:
             if embeds:
-                embed = discord.Embed(colour=config.embed_color,title='Ban Check',description=f"Player {playername}[{playertag}] is not banned directly by WCL but one or more of the clans visited by the player before got banned by WCL. Go through the follow up message to know more about it!")            
-                await ctx.send(embed=embed)    
-                p = EmbedPages(ctx,embeds=embeds) 
-                return await p.paginate() 
-            return await ctx.send(f"Player {playername}[{playertag}] is not banned by WCL and didn't visit any banned clans previously!")          
-        player_name,player_id,owner,type,duration,date,reason = val
-        desc = f"Found a Ban Record!\nPlayer Name:{player_name}\nPlayer ID:{player_id}\nDiscord Owner:{owner}\nBan Type:{type}\nDuration:{duration}\nDate Added:{date}\nReason:{reason}"
+                desc = f"Player {playername}[{playertag}] is not banned by {league.upper()}. Go through the next message to check the banned clans member has been in."
+                embed = discord.Embed(colour=config.embed_color,title='Ban Check',description=desc)            
+                return embed,embeds
+            emb = discord.Embed(color=config.embed_color,title='Ban Check',description=f"Player {playername}[{playertag}] is not banned by {league.upper()} and didn't visit any banned clans previously!")
+            return emb,[]               
+        desc = f"Found a Ban Record!\n\n"
+        for i in range(len(keys)):
+            txt = f"**{keys[i]}**: {vals[i]}\n"
+            desc = desc + txt
         embed = discord.Embed(title="Ban Check",colour=config.embed_color,description=desc)
         if embeds:
-            desc = desc + f"\nPlayer {player_name}[{playertag}] has also visited clans banned by WCL. Go through the follow up message to know more about it."
+            desc = desc + f"\nPlayer {playername}[{playertag}] has also visited clans banned by {league.upper()}. Go through the follow up message to know more about it."
             embed = discord.Embed(title="Ban Check",colour=config.embed_color,description=desc)
-            await ctx.send(embed=embed)
-            p = EmbedPages(ctx,embeds=embeds)
-            return await p.paginate()
+            return embed,embeds
+        return embed,[]
+
+    async def clanscan(self,clantag,league):
+        keys,vals = await self.is_clan_banned(clantag,league)
+        clanname = await self.get_clan_name(clantag)
+        if not vals:
+            return discord.Embed(title=clanname,color=config.embed_color,description=f"Clan {clanname}[{clantag}] is not banned by {league.upper()}")
+        desc = f"Clan {clanname} got banned by {league.upper()}.\n\n Info from ban list:\n\n"
+        for i in range(len(keys)):
+            txt = f"**{keys[i]}**: {vals[i]}\n"
+            desc = desc + txt
+        embed = discord.Embed(colour=config.embed_color,title=clanname,description=desc)
+        return embed
+
+
+    async def is_player_banned(self,playertag,league):
+        """A coroutine to check if a player is banned"""
+        
+        player_ban_list = self.player_ban_list_wcl
+        banned_players = [x for x in player_ban_list['values']]
+        banned_player_tags = [y[1] for y in banned_players]
+        if not playertag in banned_player_tags:
+            return [],[]
+        ind = banned_player_tags.index(playertag)
+        return self.match_length(banned_players[0],banned_players[ind])           
+
+    @commands.command()
+    async def wclcc(self,ctx,clantag):
+        embed = await self.clanscan(clantag,'wcl')
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def cs(self,ctx,clantag):
-        await ctx.invoke(self.cc,clantag=clantag)
+    async def update(self,ctx):
+        await self.initialize()
+        await ctx.send(f"Successfully fetched latest ban list!")
+
+    @commands.command()
+    async def wclps(self,ctx,playertag):
+        embed,embed_list = await self.playerscan(playertag,"wcl")
+        await ctx.send(embed=embed)
+        for em in embed_list:
+            await ctx.send(embed=em)
+
+
+    @commands.command()
+    async def wclcs(self,ctx,clantag):
+        await ctx.invoke(self.wclcc,clantag=clantag)
         player_tags = await self.get_clan_member_tags(clantag)
+        await ctx.send(f"Processing..... {len(player_tags)}")
         for player in player_tags:
-            await ctx.invoke(self.ps,playertag=player)
+            await ctx.invoke(self.wclps,playertag=player)
         await ctx.send('Completed!')
 
+class MLCWCheck(commands.Cog):
+    def __init__(self,bot):
+        self.bot = bot
+        self.inst = BanCheck(bot)
+        self.name = "MLCW Ban Check"
+        self.position = 2
+
+    @commands.command()
+    async def mlcwcc(self,ctx,clantag):
+        embed = await self.inst.clanscan(clantag,'mlcw')
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def mlcwps(self,ctx,playertag):
+        embed,embed_list = await self.inst.playerscan(playertag,"mlcw")
+        await ctx.send(embed=embed)
+        for em in embed_list:
+            await ctx.send(embed=em)
+
+
+    @commands.command()
+    async def mlcwcs(self,ctx,clantag):
+        await ctx.invoke(self.mlcwcc,clantag=clantag)
+        player_tags = await self.inst.get_clan_member_tags(clantag)
+        await ctx.send(f"Processing..... {len(player_tags)}")
+        for player in player_tags:
+            await ctx.invoke(self.mlcwps,playertag=player)
+        await ctx.send('Completed!')
+
+class CWLCheck(commands.Cog):
+    def __init__(self,bot):
+        self.bot = bot
+        self.inst = BanCheck(bot)
+        self.name = "CWL Ban Check"
+        self.position = 3
+
+    @commands.command()
+    async def cwlcc(self,ctx,clantag):
+        embed = await self.inst.clanscan(clantag,'cwl')
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def cwlps(self,ctx,playertag):
+        embed,embed_list = await self.inst.playerscan(playertag,"cwl")
+        await ctx.send(embed=embed)
+        for em in embed_list:
+            await ctx.send(embed=em)
+
+
+    @commands.command()
+    async def cwlcs(self,ctx,clantag):
+        await ctx.invoke(self.cwlcc,clantag=clantag)
+        player_tags = await self.inst.get_clan_member_tags(clantag)
+        await ctx.send(f"Processing..... {len(player_tags)}")
+        for player in player_tags:
+            await ctx.invoke(self.cwlps,playertag=player)
+        await ctx.send('Completed!')
+    
+    
 def setup(bot):
     bot.add_cog(BanCheck(bot))
+    bot.add_cog(MLCWCheck(bot))
+    #bot.add_cog(CWLCheck(bot))
