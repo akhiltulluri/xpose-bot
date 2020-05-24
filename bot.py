@@ -40,6 +40,12 @@ class Bot(commands.Bot):
         self._task = self.loop.create_task(self.initialize())
         #self.loop.run_until_complete(self.create_db_pool())  NO DB REQUIRED      
         self.activity = config.activity
+        for extension in config.extensions:
+            try:
+                self.load_extension(extension)
+            except:
+                print(f'Failed to load extension {extension}.')
+                traceback.print_exc()
         
                 
     async def create_db_pool(self):
@@ -47,10 +53,11 @@ class Bot(commands.Bot):
         self.db = await asyncpg.create_pool(config.postgres,command_timeout=60)
    
     async def initialize(self):
-        '''Initialize the bot with a aiohttp.ClientSession and defining the owner'''        
-        self.session = aiohttp.ClientSession(loop=self.loop)
-        await self.wait_until_ready()
+        """Initialize the bot with a aiohttp.ClientSession and defining the owner""" 
+        self.session = aiohttp.ClientSession(loop=self.loop) 
+        await self.wait_until_ready() 
         self.owner = self.get_user(self.owner_id)
+        
         
     async def process_commands(self, message):
         ctx = await self.get_context(message)
@@ -65,12 +72,6 @@ class Bot(commands.Bot):
 
     async def on_ready(self):
         self.start_time = datetime.utcnow()
-        for extension in config.extensions:
-            try:
-                self.load_extension(extension)
-            except:
-                print(f'Failed to load extension {extension}.')
-                traceback.print_exc()
         rows = (
             ('Name', self.user.name),
             ('Discord', discord.__version__),
