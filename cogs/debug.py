@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 import config
-import sys,traceback
+import sys, traceback
 from .utils.paginator import CannotPaginate, TextPages
 from .utils.logging import getLogger
 
@@ -97,7 +97,7 @@ Author: {ctx.author}[{ctx.author.id}]
 Server: {ctx.guild.name}[{ctx.guild.id}]
 Server Invite: {invite}"""
                 logger.error(log)
-                embed.add_field(name="Error",value=field)
+                embed.add_field(name="Error", value=field)
                 await self.log_channel.send(embed=embed)
                 await ctx.send(
                     "An unexpected error occured! Error report has been sent to Devs"

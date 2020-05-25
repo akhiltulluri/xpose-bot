@@ -1,23 +1,23 @@
 import os
 import discord
 
-token = os.environ.get('TOKEN','')
+token = os.environ.get("TOKEN", "")
 
-postgres = os.environ.get('DATABASE_URL','')
+postgres = os.environ.get("DATABASE_URL", "")
 
-bot_description = ''
+bot_description = ""
 
-owner = ''
+owner = ""
 
-prefixes = ['']
+prefixes = [""]
 
-extensions = ['']
+extensions = [""]
 
-activity = discord.Game(name='')
+activity = discord.Game(name="")
 
-name = '      '
+name = "      "
 
-embed_color = ''
-sheets_api_key = ''
+embed_color = ""
+sheets_api_key = ""
 log_channel = 714382330839695410
-logo = 'https://media.discordapp.net/attachments/511385199612002304/714411204210327592/Xpose_Bot.png'
+logo = "https://media.discordapp.net/attachments/511385199612002304/714411204210327592/Xpose_Bot.png"
