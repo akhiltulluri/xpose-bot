@@ -50,13 +50,13 @@ class Pages:
         self.paginating = len(entries) > per_page
         self.show_entry_count = show_entry_count
         self.reaction_emojis = [
-            ('\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}', self.first_page),
-            ('\N{BLACK LEFT-POINTING TRIANGLE}', self.previous_page),
-            ('\N{BLACK RIGHT-POINTING TRIANGLE}', self.next_page),
-            ('\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}', self.last_page),
+            ('\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\N{VARIATION SELECTOR-16}', self.first_page),
+            ('\N{BLACK LEFT-POINTING TRIANGLE}\N{VARIATION SELECTOR-16}', self.previous_page),
+            ('\N{BLACK RIGHT-POINTING TRIANGLE}\N{VARIATION SELECTOR-16}', self.next_page),
+            ('\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\N{VARIATION SELECTOR-16}', self.last_page),
             ('\N{INPUT SYMBOL FOR NUMBERS}', self.numbered_page ),
-            ('\N{BLACK SQUARE FOR STOP}', self.stop_pages),
-            ('\N{INFORMATION SOURCE}', self.show_help),
+            ('\N{BLACK SQUARE FOR STOP}\N{VARIATION SELECTOR-16}', self.stop_pages),
+            ('\N{INFORMATION SOURCE}\N{VARIATION SELECTOR-16}', self.show_help),
         ]
 
         if ctx.guild is not None:
@@ -96,11 +96,11 @@ class Pages:
 
         if self.maximum_pages > 1:
             if self.show_entry_count:
-                text = f'Page {page}/{self.maximum_pages} ({len(self.entries)} entries)'
+                text = f'Page {page}/{self.maximum_pages} ({len(self.entries)} entries) | Designed by WCL Tech Team'
             else:
-                text = f'Page {page}/{self.maximum_pages}'
+                text = f'Page {page}/{self.maximum_pages} | Designed by WCL Tech Team'
 
-            self.embed.set_footer(text=text)
+            self.embed.set_footer(text=text,icon_url=config.logo)
 
         if self.paginating and first:
             p.append('')
@@ -136,19 +136,19 @@ class Pages:
             await self.show_page(page)
 
     async def first_page(self):
-        """goes to the first page"""
+        """Goes to the first page"""
         await self.show_page(1)
 
     async def last_page(self):
-        """goes to the last page"""
+        """Goes to the last page"""
         await self.show_page(self.maximum_pages)
 
     async def next_page(self):
-        """goes to the next page"""
+        """Goes to the next page"""
         await self.checked_show_page(self.current_page + 1)
 
     async def previous_page(self):
-        """goes to the previous page"""
+        """Goes to the previous page"""
         await self.checked_show_page(self.current_page - 1)
 
     async def show_current_page(self):
@@ -156,7 +156,7 @@ class Pages:
             await self.show_page(self.current_page)
 
     async def numbered_page(self):
-        """lets you type a page number to go to"""
+        """Lets you type a page number to go to"""
         to_delete = []
         to_delete.append(await self.channel.send('What page do you want to go to?'))
 
@@ -185,7 +185,7 @@ class Pages:
             pass
 
     async def show_help(self):
-        """shows this message"""
+        """Shows this message"""
         messages = ['Welcome to the interactive paginator!\n']
         messages.append('This interactively allows you to see pages of text by navigating with ' \
                         'reactions. They are as follows:\n')

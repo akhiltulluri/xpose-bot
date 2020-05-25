@@ -10,7 +10,7 @@ class HelpPaginator(Pages):
     def __init__(self, help_command, ctx, entries, *, per_page=4):
         super().__init__(ctx, entries=entries, per_page=per_page)
         self.reaction_emojis.append((
-            '\N{WHITE QUESTION MARK ORNAMENT}',
+            '\N{BLACK QUESTION MARK ORNAMENT}',
             self.show_bot_help
         ))
         self.total = len(entries)
@@ -36,8 +36,8 @@ class HelpPaginator(Pages):
         value ='For more help, please contact mods!'
         self.embed.add_field(name='Support', value=value, inline=False)
 
-        self.embed.set_footer(text=f'Use "{self.prefix}help [command]" for more info on a command.')
-
+        self.embed.set_footer(text=f'Use "{self.prefix}help [command]" for more info on a command. | Designed by WCL Tech Team',icon_url=config.logo)
+        self.embed.set_thumbnail(url=config.logo)
         for entry in entries:
             signature = f'{self.prefix}{entry.qualified_name} {entry.signature}'
             self.embed.add_field(name=signature, value=entry.short_doc or "No help given", inline=False)
@@ -65,7 +65,7 @@ class HelpPaginator(Pages):
         self.bot.loop.create_task(go_back_to_current_page())
 
     async def show_bot_help(self):
-        """shows how to use the bot"""
+        """Shows how to use the bot"""
 
         self.embed.title = 'Using the bot'
         self.embed.description = 'Hello! Welcome to the help page.'
@@ -169,6 +169,8 @@ class PaginatedHelpCommand(commands.HelpCommand):
         # No pagination necessary for a single command.
         embed = discord.Embed(color=discord.Color.blue())
         self.common_command_formatting(embed, command)
+        embed.set_thumbnail(url=config.logo)
+        embed.set_footer(text="Designed by WCL Tech Team",icon_url=config.logo)
         await self.context.send(embed=embed)
 
     async def send_group_help(self, group):
@@ -190,7 +192,7 @@ class General(commands.Cog):
         self.old_help_command = bot.help_command
         bot.help_command = PaginatedHelpCommand()
         bot.help_command.cog = self
-        self.position = 4
+        self.position = 5
 
     def cog_unload(self):
         self.bot.help_command = self.old_help_command

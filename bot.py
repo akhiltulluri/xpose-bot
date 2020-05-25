@@ -13,17 +13,12 @@ import asyncpg
 import config
 
 from cogs.utils.formats import TabularData
+from cogs.utils.logging import getLogger
 
 
-logger = logging.getLogger('discord')
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler(filename=f'bot.log',
-                              encoding='utf-8',
-                              mode='w')
-dt_fmt = '%Y-%m-%d %H:%M:%S'
-fmt = logging.Formatter('[{asctime}] [{levelname}] {name}: {message}', dt_fmt, style='{')
-handler.setFormatter(fmt)
-logger.addHandler(handler)
+discord_logger = getLogger("discord", file=True)
+logger = getLogger(__name__)
+
 
 def get_prefix(bot, message):
     """A callable Prefix for our bot. This could be edited to allow per server prefixes."""
@@ -43,8 +38,9 @@ class Bot(commands.Bot):
         for extension in config.extensions:
             try:
                 self.load_extension(extension)
+                logger.info(f"Loaded {extension}")
             except:
-                print(f'Failed to load extension {extension}.')
+                logger.error(f'Failed to load extension {extension}.')
                 traceback.print_exc()
         
                 
@@ -82,13 +78,12 @@ class Bot(commands.Bot):
         table = TabularData()
         table.set_columns((config.name, '   Bot   '))
         table.add_rows(rows)
-        print(table.render())
-        print('Successfully logged in and booted...!')
+        logger.info(f"\n{table.render()}")
+        logger.info('Successfully logged in and booted...!\n')
         perms = discord.Permissions.none()
         perms.administrator = True
         self.invite_url = discord.utils.oauth_url(self.user.id, perms)
-        print()
-        print(f'Invite Me:\n{self.invite_url}')
+        logger.info(f'Invite Me:\n{self.invite_url}')
 
     @property
     def uptime(self):
@@ -112,8 +107,8 @@ class Bot(commands.Bot):
         try:            
             super().run(config.token, bot=True, reconnect=True)
         except Exception as e:
-            print(f'Troubles running the bot!\nError: {e}')
-            # traceback.print_exc()
+            logger.error(f'Troubles running the bot!\nError: {e}')
+            traceback.print_exc()
 
 def main():
     bot = Bot()

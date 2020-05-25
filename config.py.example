@@ -18,3 +18,6 @@ activity = discord.Game(name='')
 name = '      '
 
 embed_color = ''
+sheets_api_key = ''
+log_channel = 714382330839695410
+logo = 'https://media.discordapp.net/attachments/511385199612002304/714411204210327592/Xpose_Bot.png'
