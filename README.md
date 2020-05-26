@@ -4,6 +4,10 @@
   <strong><i>A discord bot used to know if a coc player/clan is banned by a specific league or not.</i></strong>
   <br>
   <br>
+  <a href="https://www.python.org/downloads/">
+    <img src="https://img.shields.io/badge/Made%20With-Python%203.7-blue.svg?style=for-the-badge&logo=Python" alt="Made with Python 3.8">
+  <br>
+  </a>
   <a href="https://github.com/officialakhil/xpose-bot/blob/master/LICENSE">
     <img height =30px src="https://img.shields.io/badge/LICENSE-MIT-%237289DA" alt="LICENSE" />
   </a>
