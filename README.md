@@ -63,5 +63,5 @@ Start a tmux session using `tmux` and run the following:
 To add a ban list of any other league, the only file you would want to edit is `cogs/bancheck.py`. 
 Check out the existing league's code to understand how to add a new one
 
-### Authors
+### Author(s)
 * Akhil
