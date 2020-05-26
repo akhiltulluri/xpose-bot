@@ -70,7 +70,7 @@ class BanCheck(commands.Cog):
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
         for em in embed_list:
-            em.set_thumbnail(url=config.logo)
+            # em.set_thumbnail(url=config.logo)
             em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
             await ctx.send(embed=em)
 
@@ -81,7 +81,14 @@ class BanCheck(commands.Cog):
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
-            await ctx.invoke(self.wclps, playertag=player)
+            embed, embed_list = await self.inst.playerscan(player, "wcl", clantag)
+            embed.set_thumbnail(url=config.logo)
+            embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
+            await ctx.send(embed=embed)
+            for em in embed_list:
+                # em.set_thumbnail(url=config.logo)
+                em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
+                await ctx.send(embed=em)
         await ctx.send("Completed!")
 
 
@@ -108,7 +115,7 @@ class MLCWCheck(commands.Cog):
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
         for em in embed_list:
-            em.set_thumbnail(url=config.logo)
+            # em.set_thumbnail(url=config.logo)
             em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
             await ctx.send(embed=em)
 
@@ -119,7 +126,15 @@ class MLCWCheck(commands.Cog):
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
-            await ctx.invoke(self.mlcwps, playertag=player)
+            embed, embed_list = await self.inst.playerscan(player, "mlcw", clantag)
+            embed.set_thumbnail(url=config.logo)
+            embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
+            await ctx.send(embed=embed)
+            for em in embed_list:
+                # em.set_thumbnail(url=config.logo)
+                em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
+                await ctx.send(embed=em)
+
         await ctx.send("Completed!")
 
 
@@ -146,7 +161,7 @@ class CWLCheck(commands.Cog):
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
         for em in embed_list:
-            em.set_thumbnail(url=config.logo)
+            # em.set_thumbnail(url=config.logo)
             em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
             await ctx.send(embed=em)
 
@@ -157,7 +172,15 @@ class CWLCheck(commands.Cog):
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
-            await ctx.invoke(self.cwlps, playertag=player)
+            embed, embed_list = await self.inst.playerscan(player, "cwl", clantag)
+            embed.set_thumbnail(url=config.logo)
+            embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
+            await ctx.send(embed=embed)
+            for em in embed_list:
+                # em.set_thumbnail(url=config.logo)
+                em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
+                await ctx.send(embed=em)
+
         await ctx.send("Completed!")
 
 

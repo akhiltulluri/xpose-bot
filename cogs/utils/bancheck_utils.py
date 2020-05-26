@@ -83,13 +83,15 @@ class BanCheckUtility:
         ).json()
         return resp["name"]
 
-    async def playerscan(self, playertag, league):
+    async def playerscan(self, playertag, league, clantag=None):
         playername = await self.get_player_name(playertag)
         keys, vals = await self.is_player_banned(playertag, league)
         past_clans = await self.get_player_clan_history_tags(playertag)
         visited_banned_clans = []
         embeds = []
         for tag in past_clans:
+            if tag == clantag:
+                continue
             clan_keys, clan_values = await self.is_clan_banned(tag, league)
             if clan_keys:
                 visited_banned_clans.append([clan_keys, clan_values, tag])
@@ -97,7 +99,7 @@ class BanCheckUtility:
             emb = discord.Embed(
                 title="Ban Check",
                 description=f"Player {playername}[{playertag}] is not banned by {league.upper()} {emoji.Checkmark} and found no banned clan in player clan history!",
-                colour=config.embed_color,
+                colour=discord.Colour.green(),
             )
             return emb, embeds
         for clan in visited_banned_clans:
@@ -146,18 +148,18 @@ class BanCheckUtility:
                     end_dt = f"{end.day}/{end.month}/{end.year}"
                 current_player_history_explanation = (
                     current_player_history_explanation
-                    + f"**Role:** {explanation[2].capitalize()} **Between:** {start_dt} and {end_dt}"
+                    + f"**Role:** {explanation[2].capitalize()} "
                 )
                 if (end - start).days > 0:
                     current_player_history_explanation = (
                         current_player_history_explanation
-                        + f" ({(end - start).days})\n"
+                        + f"**Between:** {start_dt} and {end_dt} ({(end - start).days})\n"
                     )
                 else:
                     current_player_history_explanation = (
-                        current_player_history_explanation + "\n"
+                        current_player_history_explanation + f"**On:** {start_dt}\n"
                     )
-            description = f"Clan {clan_name} got **banned** by {league.upper()}.\n\nDetails from their ban list:\n"
+            description = f"**Visited Banned Clan**: {clan_name}\n\nClan {clan_name} got banned by {league.upper()}.\n\nDetails from their ban list:\n"
             for i in range(len(int_keys)):
                 txt = f"**{int_keys[i]}**: {int_vals[i]}\n"
                 description = description + txt
@@ -168,16 +170,17 @@ class BanCheckUtility:
             embed = discord.Embed(
                 colour=config.embed_color, title=f"{clan_name}", description=description
             )
+            embed.set_author(name="Player Clan History")
             embeds.append(embed)
         if not vals:
             if embeds:
                 desc = f"Player {playername}[{playertag}] is not banned by {league.upper()} {emoji.Caution}. Go through the next message to check the banned clans member has been in."
                 embed = discord.Embed(
-                    colour=config.embed_color, title="Ban Check", description=desc
+                    colour=discord.Colour.gold(), title="Ban Check", description=desc
                 )
                 return embed, embeds
             emb = discord.Embed(
-                color=config.embed_color,
+                color=discord.Colour.green(),
                 title="Ban Check",
                 description=f"Player {playername}[{playertag}] is not banned by {league.upper()} {emoji.Checkmark} and didn't visit any banned clans previously!",
             )
@@ -187,7 +190,7 @@ class BanCheckUtility:
             txt = f"**{keys[i]}**: {vals[i]}\n"
             desc = desc + txt
         embed = discord.Embed(
-            title="Ban Check", colour=config.embed_color, description=desc
+            title="Ban Check", colour=discord.Colour.red(), description=desc
         )
         if embeds:
             desc = (
@@ -215,7 +218,7 @@ class BanCheckUtility:
         if not vals:
             return discord.Embed(
                 title=clanname,
-                color=config.embed_color,
+                color=discord.Colour.green(),
                 description=f"Clan {clanname}[{clantag}] is not banned by {league.upper()} {emoji.Checkmark}",
             )
         desc = f"Clan {clanname} got banned by {league.upper()} {emoji.Exclamation}.\n\nInfo from ban list:\n\n"
@@ -223,7 +226,7 @@ class BanCheckUtility:
             txt = f"**{keys[i]}**: {vals[i]}\n"
             desc = desc + txt
         embed = discord.Embed(
-            colour=config.embed_color, title=clanname, description=desc
+            colour=discord.Colour.red(), title=clanname, description=desc
         )
         return embed
 
