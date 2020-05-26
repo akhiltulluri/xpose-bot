@@ -7,12 +7,12 @@
   <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/Made%20With-Python%203.7-blue.svg?style=for-the-badge&logo=Python" alt="Made with Python 3.8">
   <br>
+  <a href="https://github.com/ambv/black">
+    <img src="https://img.shields.io/badge/Code%20Style-Black-black?style=for-the-badge">
   </a>
+
   <a href="https://github.com/officialakhil/xpose-bot/blob/master/LICENSE">
-    <img height =30px src="https://img.shields.io/badge/LICENSE-MIT-%237289DA" alt="LICENSE" />
-  </a>
-  <a href="https://github.com/psf/black">
-    <img height=30px src="https://img.shields.io/badge/Code%20Style-Black-%23000000" alt="Code style: black" />
+    <img src="https://img.shields.io/badge/license-mit-e74c3c.svg?style=for-the-badge" alt="MIT License">
   </a>
 </div>
 <br>
