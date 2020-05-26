@@ -16,7 +16,11 @@
   </a>
 </div>
 <br>
+## About XPOSE Bot
+XPOSE Bot is based on clash of clans and is designed specifically to help the leagues present out there encourage fair play. 
+The bot helps you scan a clan/player or even scan your roster to see if there are any players banned by the league before. The bot also provides player's clan history and checks if any clan banned by the league is visited by the player in the past ... giving you info about how many days the player stayed in the clan , what role etc. 
 
+This bot is developed by the WCL Tech Team
 ## Installation Insructions
 
 ### Pre-requisites
