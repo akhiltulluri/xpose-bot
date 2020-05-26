@@ -54,10 +54,19 @@ class Bot(commands.Bot):
         await self.wait_until_ready()
         self.owner = self.get_user(self.owner_id)
 
+    async def is_owner(self, user: discord.User):
+        if user.id in config.admins:
+            return True
+
     async def process_commands(self, message):
         ctx = await self.get_context(message)
         if ctx.command is None:
             return
+        if config.dev_mode:
+            if ctx.author.id not in config.admins:
+                return await ctx.send(
+                    "Bot is in development and only admins can use commands!"
+                )
         await self.invoke(ctx)
 
     async def on_message(self, message):

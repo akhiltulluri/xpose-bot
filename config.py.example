@@ -20,4 +20,6 @@ name = "      "
 embed_color = ""
 sheets_api_key = ""
 log_channel = 714382330839695410
+admins = [313943421188308992, 531548281793150987, 355820732489531395]
+dev_mode = False
 logo = "https://media.discordapp.net/attachments/511385199612002304/714411204210327592/Xpose_Bot.png"
