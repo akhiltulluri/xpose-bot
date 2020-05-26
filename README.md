@@ -1,3 +1,15 @@
+<h1 align="center">XPOSE Bot</h1>
+
+<div align="center">
+  <strong><i>A discord bot used to know if a coc player/clan is banned by a specific league or not.</i></strong>
+  <br>
+  <br>
+  <a href="https://github.com/officialakhil/xpose-bot/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/officialakhil/xpose-bot.svg?style=for-the-badge&colorB=7289DA" alt="LICENSE" />
+  </a>
+</div>
+<br>
+
 ## Installation Insructions
 
 ### Pre-requisites
