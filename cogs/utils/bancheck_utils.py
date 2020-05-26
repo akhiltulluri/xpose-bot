@@ -17,7 +17,7 @@ class BanCheckUtility:
             )
         ).json()
         if "error" in clan_members:
-            raise commands.BadArgument("That doesn't look like a valid clan tag.")
+            raise commands.BadArgument(f"{clantag} doesn't look like a valid clan tag.")
         player_tags = [x["tag"] for x in clan_members]
         return player_tags
 
@@ -49,7 +49,7 @@ class BanCheckUtility:
             )
         ).json()
         if "error" in player_clan_history:
-            raise commands.BadArgument("That doesn't look like a valid player tag.")
+            raise commands.BadArgument(f"{playertag} doesn't look like a valid player tag.")
         player_past_clan_tags = list(player_clan_history["clansMap"].keys())
         return player_past_clan_tags
 
@@ -76,7 +76,7 @@ class BanCheckUtility:
             await self.bot.session.get(self.bot.cmembers_endpoint + clantag)
         ).json()
         if "error" in resp:
-            raise commands.BadArgument("That doesn't look like a valid clan tag.")
+            raise commands.BadArgument(f"{clantag} doesn't look like a valid clan tag.")
         return resp["name"]
 
     async def get_player_name(self, playertag):
@@ -85,7 +85,7 @@ class BanCheckUtility:
             await self.bot.session.get(self.bot.chistory_endpoint + playertag)
         ).json()
         if "error" in resp:
-            raise commands.BadArgument("That doesn't look like a valid player tag.")
+            raise commands.BadArgument(f"{playertag} doesn't look like a valid player tag.")
         return resp["name"]
 
     async def playerscan(self, playertag, league, clantag=None):

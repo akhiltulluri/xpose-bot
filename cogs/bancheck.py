@@ -192,7 +192,7 @@ class Spreadsheet:
             sheet_id = match.groupdict()["id"]
             endpoint = f"https://sheets.googleapis.com/v4/spreadsheets/{sheet_id}/values/E24:E?key={config.sheets_api_key}"
             return endpoint
-        raise commands.BadArgument("That doesn't look like a valid roster link")
+        raise commands.BadArgument(f"{argument} doesn't look like a valid roster link.")
 
 
 class RosterCheck(commands.Cog):
