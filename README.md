@@ -5,7 +5,7 @@
   <br>
   <br>
   <a href="https://github.com/officialakhil/xpose-bot/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/officialakhil/xpose-bot.svg?style=for-the-badge&colorB=7289DA" alt="LICENSE" />
+    <img src="https://img.shields.io/github/license/officialakhil/forpy.svg?style=for-the-badge&colorB=7289DA" alt="LICENSE" />
   </a>
 </div>
 <br>
