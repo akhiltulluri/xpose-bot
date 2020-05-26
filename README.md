@@ -5,10 +5,10 @@
   <br>
   <br>
   <a href="https://github.com/officialakhil/xpose-bot/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/officialakhil/forpy.svg?style=for-the-badge&colorB=7289DA" alt="LICENSE" />
+    <img height =30px src="https://img.shields.io/badge/LICENSE-MIT-%237289DA" alt="LICENSE" />
   </a>
   <a href="https://github.com/psf/black">
-    <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black" />
+    <img height=30px src="https://img.shields.io/badge/Code%20Style-Black-%23000000" alt="Code style: black" />
   </a>
 </div>
 <br>
