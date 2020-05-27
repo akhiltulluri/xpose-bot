@@ -22,7 +22,7 @@ XPOSE Bot is based on clash of clans and is designed specifically to help the le
 The bot helps you scan a clan/player or even scan your roster to see if there are any players banned by the league before. The bot also provides player's clan history and checks if any clan banned by the league is visited by the player in the past ... giving you info about how many days the player stayed in the clan , what role etc. 
 
 This bot is developed by the WCL Tech Team
-## Installation Insructions
+## Installation Instructions
 
 ### Pre-requisites
 * Python v3.8.0+
@@ -63,5 +63,5 @@ Start a tmux session using `tmux` and run the following:
 To add a ban list of any other league, the only file you would want to edit is `cogs/bancheck.py`. 
 Check out the existing league's code to understand how to add a new one
 
-### Authors
+### Author(s)
 * Akhil
