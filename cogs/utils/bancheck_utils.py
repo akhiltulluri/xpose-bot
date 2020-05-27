@@ -17,7 +17,12 @@ class BanCheckUtility:
             )
         ).json()
         if "error" in clan_members:
-            raise commands.BadArgument(f"{clantag} doesn't look like a valid clan tag.")
+            if clan_members["error"] == "Not Found":
+                raise commands.BadArgument(
+                    f"{clantag} doesn't look like a valid clan tag."
+                )
+            else:
+                return []
         player_tags = [x["tag"] for x in clan_members]
         return player_tags
 
@@ -49,7 +54,12 @@ class BanCheckUtility:
             )
         ).json()
         if "error" in player_clan_history:
-            raise commands.BadArgument(f"{playertag} doesn't look like a valid player tag.")
+            if player_clan_history["error"] == "Not Found":
+                raise commands.BadArgument(
+                    f"{playertag} doesn't look like a valid player tag."
+                )
+            else:
+                return []
         player_past_clan_tags = list(player_clan_history["clansMap"].keys())
         return player_past_clan_tags
 
@@ -76,7 +86,12 @@ class BanCheckUtility:
             await self.bot.session.get(self.bot.cmembers_endpoint + clantag)
         ).json()
         if "error" in resp:
-            raise commands.BadArgument(f"{clantag} doesn't look like a valid clan tag.")
+            if resp["error"] == "Not Found":
+                raise commands.BadArgument(
+                    f"{clantag} doesn't look like a valid clan tag."
+                )
+            else:
+                return ""
         return resp["name"]
 
     async def get_player_name(self, playertag):
@@ -85,7 +100,12 @@ class BanCheckUtility:
             await self.bot.session.get(self.bot.chistory_endpoint + playertag)
         ).json()
         if "error" in resp:
-            raise commands.BadArgument(f"{playertag} doesn't look like a valid player tag.")
+            if resp["error"] == "Not Found":
+                raise commands.BadArgument(
+                    f"{playertag} doesn't look like a valid player tag."
+                )
+            else:
+                return ""
         return resp["name"]
 
     async def playerscan(self, playertag, league, clantag=None):
@@ -203,7 +223,7 @@ class BanCheckUtility:
                 + f"\nPlayer {playername}[{playertag}] has also visited clans banned by {league.upper()}. Go through the follow up message to know more about it."
             )
             embed = discord.Embed(
-                title="Ban Check", colour=config.embed_color, description=desc
+                title="Ban Check", colour=discord.Colour.red(), description=desc
             )
             return embed, embeds
         return embed, []
