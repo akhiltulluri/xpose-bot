@@ -199,7 +199,7 @@ class RosterCheck(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.position = 4
-        self.name = "Roster BanCheck Commands"
+        self.name = "Roster BanCheck"
         self.inst = BanCheckUtility(bot)
 
     @commands.command()
