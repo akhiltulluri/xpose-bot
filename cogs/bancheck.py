@@ -248,7 +248,7 @@ class RosterCheck(commands.Cog):
         for playertag in playertags:
             try:
                 embed, embed_list = await self.inst.playerscan(playertag[0], "wcl")
-            except InvalidTag:
+            except (InvalidTag,commands.BadArgument) as e:
                 failed_tags.append(playertag[0]) 
                 continue  
             embed.set_thumbnail(url=config.logo)
