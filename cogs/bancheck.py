@@ -60,7 +60,7 @@ class BanCheck(commands.Cog):
         try:
             embed = await self.inst.clanscan(clantag, "wcl")
         except InvalidTag:
-            return await ctx.send(f"{clantag} doesn't look like a valid one!")
+            return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -71,7 +71,7 @@ class BanCheck(commands.Cog):
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "wcl")
         except InvalidTag:
-            return await ctx.send(f"{playertag} doesn't look like a valid one!")
+            return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -111,7 +111,7 @@ class MLCWCheck(commands.Cog):
         try:
             embed = await self.inst.clanscan(clantag, "mlcw")
         except InvalidTag:
-            return await ctx.send(f"{clantag} doesn't look like a valid one!")
+            return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -122,7 +122,7 @@ class MLCWCheck(commands.Cog):
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "mlcw")
         except InvalidTag:
-            return await ctx.send(f"{playertag} doesn't look like a valid one!")
+            return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -163,7 +163,7 @@ class CWLCheck(commands.Cog):
         try:
             embed = await self.inst.clanscan(clantag, "cwl")
         except InvalidTag:
-            return await ctx.send(f"{clantag} doesn't look like a valid one!")
+            return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -174,7 +174,7 @@ class CWLCheck(commands.Cog):
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "cwl")
         except InvalidTag:
-            return await ctx.send(f"{playertag} doesn't look like a valid one!")
+            return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
