@@ -84,6 +84,10 @@ class BanCheck(commands.Cog):
     async def wclcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to WCL Ban list. Includes info about player visits to clans banned by WCL."""
         await ctx.invoke(self.wclcc, clantag=clantag)
+        try:
+            clanname = await self.inst.get_clan_name(clantag)
+        except InvalidTag:
+            return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
@@ -135,6 +139,10 @@ class MLCWCheck(commands.Cog):
     async def mlcwcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to MLCW Ban list. Includes info about player visits to clans banned by MLCW."""
         await ctx.invoke(self.mlcwcc, clantag=clantag)
+        try:
+            clanname = await self.inst.get_clan_name(clantag)
+        except InvalidTag:
+            return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
@@ -187,6 +195,10 @@ class CWLCheck(commands.Cog):
     async def cwlcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to CWL Ban list. Includes info about player visits to clans banned by CWL."""
         await ctx.invoke(self.cwlcc, clantag=clantag)
+        try:
+            clanname = await self.inst.get_clan_name(clantag)
+        except InvalidTag:
+            return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
