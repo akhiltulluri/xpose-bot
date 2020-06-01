@@ -33,7 +33,7 @@ class HelpPaginator(Pages):
         self.embed.title = self.title
 
         # if self.get_page is self.get_bot_page:
-        value = "For more help, please contact mods!"
+        value = "For more help, please visit the [documentation](https://xposebot.com)."
         self.embed.add_field(name="Support", value=value, inline=False)
 
         self.embed.set_footer(

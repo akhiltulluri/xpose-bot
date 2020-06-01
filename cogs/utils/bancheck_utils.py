@@ -4,6 +4,8 @@ from dateutil.parser import parse
 import config
 from . import emoji
 
+class InvalidTag(Exception):
+    pass
 
 class BanCheckUtility:
     def __init__(self, bot):
@@ -11,16 +13,17 @@ class BanCheckUtility:
 
     async def get_clan_member_tags(self, clantag):
         clantag = clantag[1:]
-        clan_members = await (
+        try:
+            clan_members = await (
             await self.bot.session.get(
                 self.bot.cmembers_endpoint + f"{clantag}/members"
             )
         ).json()
+        except Exception as e:
+            raise commands.BadArgument(f"{playertag} doesn't look like a valid tag!")
         if "error" in clan_members:
             if clan_members["error"] == "Not Found":
-                raise commands.BadArgument(
-                    f"{clantag} doesn't look like a valid clan tag."
-                )
+                raise InvalidTag()
             else:
                 return []
         player_tags = [x["tag"] for x in clan_members]
@@ -48,16 +51,17 @@ class BanCheckUtility:
     async def get_player_clan_history_tags(self, playertag):
         """A coroutine to get player clan history"""
         playertag = playertag[1:]
-        player_clan_history = await (
+        try:
+            player_clan_history = await (
             await self.bot.session.get(
                 f"{self.bot.chistory_endpoint}{playertag}/history/clans"
             )
         ).json()
+        except Exception as e:
+            raise commands.BadArgument(f"{playertag} doesn't look like a valid tag!")
         if "error" in player_clan_history:
             if player_clan_history["error"] == "Not Found":
-                raise commands.BadArgument(
-                    f"{playertag} doesn't look like a valid player tag."
-                )
+                raise InvalidTag()
             else:
                 return []
         player_past_clan_tags = list(player_clan_history["clansMap"].keys())
@@ -82,28 +86,30 @@ class BanCheckUtility:
 
     async def get_clan_name(self, clantag):
         clantag = clantag[1:]
-        resp = await (
+        try:
+            resp = await (
             await self.bot.session.get(self.bot.cmembers_endpoint + clantag)
         ).json()
+        except Exception as e:
+            raise commands.BadArgument(f"{playertag} doesn't look like a valid tag!")
         if "error" in resp:
             if resp["error"] == "Not Found":
-                raise commands.BadArgument(
-                    f"{clantag} doesn't look like a valid clan tag."
-                )
+                raise InvalidTag()
             else:
                 return ""
         return resp["name"]
 
     async def get_player_name(self, playertag):
         playertag = playertag[1:]
-        resp = await (
+        try:
+            resp = await (
             await self.bot.session.get(self.bot.chistory_endpoint + playertag)
         ).json()
+        except Exception as e:
+            raise commands.BadArgument(f"{playertag} doesn't look like a valid tag!")
         if "error" in resp:
             if resp["error"] == "Not Found":
-                raise commands.BadArgument(
-                    f"{playertag} doesn't look like a valid player tag."
-                )
+                raise InvalidTag()
             else:
                 return ""
         return resp["name"]
