@@ -6,7 +6,7 @@ import re
 import config
 from .utils.paginator import EmbedPages
 from .utils import emoji
-from .utils.bancheck_utils import BanCheckUtility
+from .utils.bancheck_utils import BanCheckUtility,InvalidTag
 
 SPREADSHEET_REGEX = re.compile(
     r"(https?:\/\/)?(www\.)?docs.google\.com\/spreadsheets(\/u\/0)?\/d\/(?P<id>[a-zA-Z0-9_-]+)"
@@ -57,7 +57,10 @@ class BanCheck(commands.Cog):
     @commands.command()
     async def wclcc(self, ctx, clantag):
         """Check if a clan is banned or not according to WCL Ban List"""
-        embed = await self.inst.clanscan(clantag, "wcl")
+        try:
+            embed = await self.inst.clanscan(clantag, "wcl")
+        except InvalidTag:
+            return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -65,7 +68,10 @@ class BanCheck(commands.Cog):
     @commands.command()
     async def wclps(self, ctx, playertag):
         """Check if a player is banned or not according to WCL Ban list. Also gives information about player visits to clans banned by WCL"""
-        embed, embed_list = await self.inst.playerscan(playertag, "wcl")
+        try:
+            embed, embed_list = await self.inst.playerscan(playertag, "wcl")
+        except InvalidTag:
+            return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -78,6 +84,10 @@ class BanCheck(commands.Cog):
     async def wclcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to WCL Ban list. Includes info about player visits to clans banned by WCL."""
         await ctx.invoke(self.wclcc, clantag=clantag)
+        try:
+            clanname = await self.inst.get_clan_name(clantag)
+        except InvalidTag:
+            return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
@@ -102,7 +112,10 @@ class MLCWCheck(commands.Cog):
     @commands.command()
     async def mlcwcc(self, ctx, clantag):
         """Check if a clan is banned or not according to MLCW Ban List"""
-        embed = await self.inst.clanscan(clantag, "mlcw")
+        try:
+            embed = await self.inst.clanscan(clantag, "mlcw")
+        except InvalidTag:
+            return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -110,7 +123,10 @@ class MLCWCheck(commands.Cog):
     @commands.command()
     async def mlcwps(self, ctx, playertag):
         """Check if a player is banned or not according to MLCW Ban list. Also gives information about player visits to clans banned by MLCW"""
-        embed, embed_list = await self.inst.playerscan(playertag, "mlcw")
+        try:
+            embed, embed_list = await self.inst.playerscan(playertag, "mlcw")
+        except InvalidTag:
+            return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -123,6 +139,10 @@ class MLCWCheck(commands.Cog):
     async def mlcwcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to MLCW Ban list. Includes info about player visits to clans banned by MLCW."""
         await ctx.invoke(self.mlcwcc, clantag=clantag)
+        try:
+            clanname = await self.inst.get_clan_name(clantag)
+        except InvalidTag:
+            return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
@@ -148,7 +168,10 @@ class CWLCheck(commands.Cog):
     @commands.command()
     async def cwlcc(self, ctx, clantag):
         """Check if a clan is banned or not according to CWL Ban List"""
-        embed = await self.inst.clanscan(clantag, "cwl")
+        try:
+            embed = await self.inst.clanscan(clantag, "cwl")
+        except InvalidTag:
+            return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -156,7 +179,10 @@ class CWLCheck(commands.Cog):
     @commands.command()
     async def cwlps(self, ctx, playertag):
         """Check if a player is banned or not according to CWL Ban list. Also gives information about player visits to clans banned by CWL"""
-        embed, embed_list = await self.inst.playerscan(playertag, "cwl")
+        try:
+            embed, embed_list = await self.inst.playerscan(playertag, "cwl")
+        except InvalidTag:
+            return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
         await ctx.send(embed=embed)
@@ -169,6 +195,10 @@ class CWLCheck(commands.Cog):
     async def cwlcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to CWL Ban list. Includes info about player visits to clans banned by CWL."""
         await ctx.invoke(self.cwlcc, clantag=clantag)
+        try:
+            clanname = await self.inst.get_clan_name(clantag)
+        except InvalidTag:
+            return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
         for player in player_tags:
@@ -191,7 +221,7 @@ class Spreadsheet:
         if match:
             sheet_id = match.groupdict()["id"]
             endpoint = f"https://sheets.googleapis.com/v4/spreadsheets/{sheet_id}/values/E24:E?key={config.sheets_api_key}"
-            return endpoint
+            return [argument,endpoint]
         raise commands.BadArgument(f"{argument} doesn't look like a valid roster link.")
 
 
@@ -205,11 +235,22 @@ class RosterCheck(commands.Cog):
     @commands.command()
     async def wclrs(self, ctx, spreadsheetlink: Spreadsheet):
         """Fetches player tags from the roster spreadsheet url and scans the player. This is simliar to manually running `wclps` command on each playertag from the roster. This command works only for WCL league as of now"""
-        data = (await (await self.bot.session.get(spreadsheetlink)).json())["values"]
+        try:
+            data = (await (await self.bot.session.get(spreadsheetlink[1])).json())
+        except Exception as e:
+            raise commands.BadArgument(f"{spreadsheetlink[0]} doesn't look like a valid roster link.")
+        if 'error' in data:
+            raise commands.BadArgument(f"{spreadsheetlink[0]} doesn't look like a valid roster link.")
+        data = data['values']
         playertags = [x for x in data if len(x) > 0]
         await ctx.send(f"Processing... {len(playertags)} members")
+        failed_tags = []
         for playertag in playertags:
-            embed, embed_list = await self.inst.playerscan(playertag[0], "wcl")
+            try:
+                embed, embed_list = await self.inst.playerscan(playertag[0], "wcl")
+            except InvalidTag:
+                failed_tags.append(playertag[0]) 
+                continue  
             embed.set_thumbnail(url=config.logo)
             embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
             await ctx.send(embed=embed)
@@ -217,6 +258,13 @@ class RosterCheck(commands.Cog):
                 em.set_thumbnail(url=config.logo)
                 em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
                 await ctx.send(embed=em)
+        to_send = ''
+        for tag in failed_tags:
+            to_send = to_send + f"{tag}\n"
+        if failed_tags:
+            embed = discord.Embed(title="Failed Scan!",description=f"Failed scanning the following tags:\n{to_send}",colour=discord.Colour.red())
+            embed.set_thumbnail(url=config.logo)
+            await ctx.send(embed=embed)
         await ctx.send("Completed!")
 
 
