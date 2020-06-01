@@ -115,6 +115,9 @@ class BanCheckUtility:
         return resp["name"]
 
     async def playerscan(self, playertag, league, clantag=None):
+        playertag = playertag.strip()
+        if clantag:
+            clantag = clantag.strip()
         playername = await self.get_player_name(playertag)
         keys, vals = await self.is_player_banned(playertag, league)
         past_clans = await self.get_player_clan_history_tags(playertag)
@@ -244,6 +247,7 @@ class BanCheckUtility:
         return list1, list2
 
     async def clanscan(self, clantag, league):
+        clantag = clantag.strip()
         keys, vals = await self.is_clan_banned(clantag, league)
         clanname = await self.get_clan_name(clantag)
         if not vals:
