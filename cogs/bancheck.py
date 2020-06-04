@@ -90,8 +90,13 @@ class BanCheck(commands.Cog):
             return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
+        failed_tags = []
         for player in player_tags:
-            embed, embed_list = await self.inst.playerscan(player, "wcl", clantag)
+            try:
+                embed, embed_list = await self.inst.playerscan(player, "wcl", clantag)
+            except (InvalidTag,commands.BadArgument):
+                failed_tags.append(player)
+                continue
             embed.set_thumbnail(url=config.logo)
             embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
             await ctx.send(embed=embed)
@@ -99,6 +104,12 @@ class BanCheck(commands.Cog):
                 # em.set_thumbnail(url=config.logo)
                 em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
                 await ctx.send(embed=em)
+        to_send = ''
+        for tag in failed_tags:
+            to_send = to_send + f"{tag}\n"
+        if failed_tags:
+            embed = discord.Embed(colour=discord.Colour.red(), description= f"Failed scanning the following tags:\n{to_send}",title="Failed Scan")
+            await ctx.send(embed=embed)
         await ctx.send("Completed!")
 
 
@@ -145,8 +156,13 @@ class MLCWCheck(commands.Cog):
             return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
+        failed_tags = []
         for player in player_tags:
-            embed, embed_list = await self.inst.playerscan(player, "mlcw", clantag)
+            try:
+                embed, embed_list = await self.inst.playerscan(player, "mlcw", clantag)
+            except (InvalidTag,commands.BadArgument):
+                failed_tags.append(player)
+                continue
             embed.set_thumbnail(url=config.logo)
             embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
             await ctx.send(embed=embed)
@@ -154,7 +170,12 @@ class MLCWCheck(commands.Cog):
                 # em.set_thumbnail(url=config.logo)
                 em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
                 await ctx.send(embed=em)
-
+        to_send = ''
+        for tag in failed_tags:
+            to_send = to_send + f"{tag}\n"
+        if failed_tags:
+            embed = discord.Embed(colour=discord.Colour.red(), description= f"Failed scanning the following tags:\n{to_send}",title="Failed Scan")
+            await ctx.send(embed=embed)
         await ctx.send("Completed!")
 
 
@@ -201,8 +222,13 @@ class CWLCheck(commands.Cog):
             return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
+        failed_tags = []
         for player in player_tags:
-            embed, embed_list = await self.inst.playerscan(player, "cwl", clantag)
+            try:
+                embed, embed_list = await self.inst.playerscan(player, "cwl", clantag)
+            except (InvalidTag,commands.BadArgument):
+                failed_tags.append(player)
+                continue
             embed.set_thumbnail(url=config.logo)
             embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
             await ctx.send(embed=embed)
@@ -210,7 +236,12 @@ class CWLCheck(commands.Cog):
                 # em.set_thumbnail(url=config.logo)
                 em.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
                 await ctx.send(embed=em)
-
+        to_send = ''
+        for tag in failed_tags:
+            to_send = to_send + f"{tag}\n"
+        if failed_tags:
+            embed = discord.Embed(colour=discord.Colour.red(), description= f"Failed scanning the following tags:\n{to_send}",title="Failed Scan")
+            await ctx.send(embed=embed)
         await ctx.send("Completed!")
 
 
