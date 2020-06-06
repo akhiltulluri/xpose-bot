@@ -59,7 +59,7 @@ class BanCheck(commands.Cog):
         """Check if a clan is banned or not according to WCL Ban List"""
         try:
             embed = await self.inst.clanscan(clantag, "wcl")
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
@@ -70,7 +70,7 @@ class BanCheck(commands.Cog):
         """Check if a player is banned or not according to WCL Ban list. Also gives information about player visits to clans banned by WCL"""
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "wcl")
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
@@ -86,7 +86,7 @@ class BanCheck(commands.Cog):
         await ctx.invoke(self.wclcc, clantag=clantag)
         try:
             clanname = await self.inst.get_clan_name(clantag)
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
@@ -125,7 +125,7 @@ class MLCWCheck(commands.Cog):
         """Check if a clan is banned or not according to MLCW Ban List"""
         try:
             embed = await self.inst.clanscan(clantag, "mlcw")
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
@@ -136,7 +136,7 @@ class MLCWCheck(commands.Cog):
         """Check if a player is banned or not according to MLCW Ban list. Also gives information about player visits to clans banned by MLCW"""
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "mlcw")
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
@@ -152,7 +152,7 @@ class MLCWCheck(commands.Cog):
         await ctx.invoke(self.mlcwcc, clantag=clantag)
         try:
             clanname = await self.inst.get_clan_name(clantag)
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
@@ -191,7 +191,7 @@ class CWLCheck(commands.Cog):
         """Check if a clan is banned or not according to CWL Ban List"""
         try:
             embed = await self.inst.clanscan(clantag, "cwl")
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return await ctx.send(f"{clantag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
@@ -202,7 +202,7 @@ class CWLCheck(commands.Cog):
         """Check if a player is banned or not according to CWL Ban list. Also gives information about player visits to clans banned by CWL"""
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "cwl")
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return await ctx.send(f"{playertag} doesn't look like a valid tag!")
         embed.set_thumbnail(url=config.logo)
         embed.set_footer(text="Designed by WCL Tech Team", icon_url=config.logo)
@@ -218,7 +218,7 @@ class CWLCheck(commands.Cog):
         await ctx.invoke(self.cwlcc, clantag=clantag)
         try:
             clanname = await self.inst.get_clan_name(clantag)
-        except InvalidTag:
+        except (InvalidTag,commands.BadArgument) as e:
             return
         player_tags = await self.inst.get_clan_member_tags(clantag)
         await ctx.send(f"Processing..... {len(player_tags)} members")
