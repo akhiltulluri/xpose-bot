@@ -20,7 +20,7 @@ class BanCheckUtility:
             )
         ).json()
         except Exception as e:
-            raise commands.BadArgument(f"{playertag} doesn't look like a valid tag!")
+            raise commands.BadArgument(f"{clantag} doesn't look like a valid tag!")
         if "error" in clan_members:
             if clan_members["error"] == "Not Found":
                 raise InvalidTag()
@@ -91,7 +91,7 @@ class BanCheckUtility:
             await self.bot.session.get(self.bot.cmembers_endpoint + clantag)
         ).json()
         except Exception as e:
-            raise commands.BadArgument(f"{playertag} doesn't look like a valid tag!")
+            raise commands.BadArgument(f"{clantag} doesn't look like a valid tag!")
         if "error" in resp:
             if resp["error"] == "Not Found":
                 raise InvalidTag()
