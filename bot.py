@@ -71,7 +71,8 @@ class Bot(commands.Bot):
 
     async def on_message(self, message):
         if message.author.bot:
-            return
+            if not message.author.id == 204255221017214977: # Whitelist YAGPDB
+                return
         await self.process_commands(message)
 
     async def on_ready(self):
