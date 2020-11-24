@@ -18,6 +18,7 @@ from cogs.utils.logging import getLogger
 
 discord_logger = getLogger("discord", file=True)
 logger = getLogger(__name__)
+intents = discord.Intents.default()
 
 
 def get_prefix(bot, message):
@@ -31,7 +32,7 @@ def get_prefix(bot, message):
 
 class Bot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=get_prefix, description=config.bot_description)
+        super().__init__(command_prefix=get_prefix, description=config.bot_description, intents=intents)
         self.owner_id = config.owner
         self._task = self.loop.create_task(self.initialize())
         # self.loop.run_until_complete(self.create_db_pool())  NO DB REQUIRED
