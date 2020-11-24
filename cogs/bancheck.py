@@ -251,7 +251,7 @@ class Spreadsheet:
         match = SPREADSHEET_REGEX.search(argument)
         if match:
             sheet_id = match.groupdict()["id"]
-            endpoint = f"https://sheets.googleapis.com/v4/spreadsheets/{sheet_id}/values/E24:E?key={config.sheets_api_key}"
+            endpoint = f"https://sheets.googleapis.com/v4/spreadsheets/{sheet_id}/values/C6:C?key={config.sheets_api_key}"
             return [argument,endpoint]
         raise commands.BadArgument(f"{argument} doesn't look like a valid roster link.")
 
