@@ -12,6 +12,10 @@ SPREADSHEET_REGEX = re.compile(
     r"(https?:\/\/)?(www\.)?docs.google\.com\/spreadsheets(\/u\/0)?\/d\/(?P<id>[a-zA-Z0-9_-]+)"
 )
 
+def remove_unnecessary_stuff(text: str):
+    """Removes unnecessary unicode chars and spaces and returns the text"""
+    return text.split()[0].encode('ascii','ignore').decode('utf-8')
+
 
 class BanCheck(commands.Cog):
     def __init__(self, bot):
@@ -278,7 +282,7 @@ class RosterCheck(commands.Cog):
         failed_tags = []
         for playertag in playertags:
             try:
-                embed, embed_list = await self.inst.playerscan(playertag[0], "wcl")
+                embed, embed_list = await self.inst.playerscan(remove_unnecessary_stuff(playertag[0]), "wcl")
             except (InvalidTag,commands.BadArgument) as e:
                 failed_tags.append(playertag[0]) 
                 continue  
