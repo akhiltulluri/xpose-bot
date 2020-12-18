@@ -13,9 +13,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8.5
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then python3 -m pip install -r requirements.txt; fi
+        python -m pip install --upgrade pip
+        pip install pipenv
+        pipenv install
+    - name: Make envfile
+      run: |
+        touch .env
+        echo TOKEN=${{ secrets.TOKEN }} >> .env
+        echo SHEETS_API_KEY=${{ secrets.SHEETS_API_KEY }} >> .env
     - name: Restart the bot
       run: pm2 restart xposebot
