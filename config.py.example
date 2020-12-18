@@ -5,21 +5,21 @@ token = os.environ.get("TOKEN", "")
 
 postgres = os.environ.get("DATABASE_URL", "")
 
-bot_description = ""
+bot_description = "XPOSE Bot"
 
-owner = ""
+owner = 313943421188308992
 
-prefixes = [""]
+prefixes = ["xp "]
 
-extensions = [""]
+extensions = ["cogs.general","cogs.debug","jishaku","cogs.bancheck"]
 
-activity = discord.Game(name="")
+activity = discord.Activity(type=discord.ActivityType.listening,name="xp help")
 
-name = "      "
+name = "   XPOSE   "
 
-embed_color = ""
-sheets_api_key = ""
-log_channel = 714382330839695410
-admins = [313943421188308992, 531548281793150987, 355820732489531395]
+embed_color = discord.Colour.blue() 
+sheets_api_key = os.environ.get("SHEETS_API_KEY","")
+log_channel = 714382330839695410 
+logo = "https://media.discordapp.net/attachments/511385199612002304/714411204210327592/Xpose_Bot.png" 
+admins = [313943421188308992, 531548281793150987,355820732489531395]
 dev_mode = False
-logo = "https://media.discordapp.net/attachments/511385199612002304/714411204210327592/Xpose_Bot.png"
