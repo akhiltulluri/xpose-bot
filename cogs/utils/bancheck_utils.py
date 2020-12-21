@@ -124,7 +124,7 @@ class BanCheckUtility:
         visited_banned_clans = []
         embeds = []
         for tag in past_clans:
-            if tag == clantag.lower():
+            if tag == clantag:
                 continue
             clan_keys, clan_values = await self.is_clan_banned(tag, league)
             if clan_keys:
