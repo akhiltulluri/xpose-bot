@@ -26,7 +26,7 @@ class BanCheckUtility:
                 raise InvalidTag()
             else:
                 return []
-        player_tags = [x["tag"] for x in clan_members]
+        player_tags = [x["tag"].lower() for x in clan_members]
         return player_tags
 
     async def is_clan_banned(self, clantag, league):
@@ -39,10 +39,10 @@ class BanCheckUtility:
             clan_ban_list = self.bot.clan_ban_list_mlcw
         if league == "cwl":
             banned_clans = [x for x in clan_ban_list["values"] if len(x) > 0]
-            banned_clan_tags = [z[0] for z in banned_clans if len(z) > 0]
+            banned_clan_tags = [z[0].lower() for z in banned_clans if len(z) > 0]
         else:
             banned_clans = [x for x in clan_ban_list["values"] if len(x) > 1]
-            banned_clan_tags = [y[1] for y in banned_clans if len(y) > 1]
+            banned_clan_tags = [y[1].lower() for y in banned_clans if len(y) > 1]
         if not clantag in banned_clan_tags:
             return [], []
         ind = banned_clan_tags.index(clantag)
@@ -64,7 +64,7 @@ class BanCheckUtility:
                 raise InvalidTag()
             else:
                 return []
-        player_past_clan_tags = list(player_clan_history["clansMap"].keys())
+        player_past_clan_tags = [x.lower() for x in player_clan_history["clansMap"].keys()]
         return player_past_clan_tags
 
     async def get_history_data(self, playertag, clantag):
@@ -80,7 +80,7 @@ class BanCheckUtility:
         for log in logs:
             if "tag" in log:
                 tag = log["tag"]
-                if tag == clantag:
+                if tag.lower() == clantag.lower():
                     required.append(log)
         return required
 
@@ -115,9 +115,9 @@ class BanCheckUtility:
         return resp["name"]
 
     async def playerscan(self, playertag, league, clantag=None):
-        playertag = playertag.strip()
+        playertag = playertag.strip().lower()
         if clantag:
-            clantag = clantag.strip()
+            clantag = clantag.strip().lower()
         playername = await self.get_player_name(playertag)
         keys, vals = await self.is_player_banned(playertag, league)
         past_clans = await self.get_player_clan_history_tags(playertag)
@@ -132,7 +132,7 @@ class BanCheckUtility:
         if not vals and visited_banned_clans is None:
             emb = discord.Embed(
                 title="Ban Check",
-                description=f"Player {playername}[{playertag}] is not banned by {league.upper()} {emoji.Checkmark} and found no banned clan in player clan history!",
+                description=f"Player {playername}[{playertag.upper()}] is not banned by {league.upper()} {emoji.Checkmark} and found no banned clan in player clan history!",
                 colour=discord.Colour.green(),
             )
             return emb, embeds
@@ -208,7 +208,7 @@ class BanCheckUtility:
             embeds.append(embed)
         if not vals:
             if embeds:
-                desc = f"Player {playername}[{playertag}] is not banned by {league.upper()} {emoji.Caution}. Go through the next message to check the banned clans member has been in."
+                desc = f"Player {playername}[{playertag.upper()}] is not banned by {league.upper()} {emoji.Caution}. Go through the next message to check the banned clans member has been in."
                 embed = discord.Embed(
                     colour=discord.Colour.gold(), title="Ban Check", description=desc
                 )
@@ -216,7 +216,7 @@ class BanCheckUtility:
             emb = discord.Embed(
                 color=discord.Colour.green(),
                 title="Ban Check",
-                description=f"Player {playername}[{playertag}] is not banned by {league.upper()} {emoji.Checkmark} and didn't visit any banned clans previously!",
+                description=f"Player {playername}[{playertag.upper()}] is not banned by {league.upper()} {emoji.Checkmark} and didn't visit any banned clans previously!",
             )
             return emb, []
         desc = f"Found a Ban Record! {emoji.Exclamation}\n\n"
@@ -229,7 +229,7 @@ class BanCheckUtility:
         if embeds:
             desc = (
                 desc
-                + f"\nPlayer {playername}[{playertag}] has also visited clans banned by {league.upper()}. Go through the follow up message to know more about it."
+                + f"\nPlayer {playername}[{playertag.upper()}] has also visited clans banned by {league.upper()}. Go through the follow up message to know more about it."
             )
             embed = discord.Embed(
                 title="Ban Check", colour=discord.Colour.red(), description=desc
@@ -247,14 +247,14 @@ class BanCheckUtility:
         return list1, list2
 
     async def clanscan(self, clantag, league):
-        clantag = clantag.strip()
+        clantag = clantag.strip().lower()
         keys, vals = await self.is_clan_banned(clantag, league)
         clanname = await self.get_clan_name(clantag)
         if not vals:
             return discord.Embed(
                 title=clanname,
                 color=discord.Colour.green(),
-                description=f"Clan {clanname}[{clantag}] is not banned by {league.upper()} {emoji.Checkmark}",
+                description=f"Clan {clanname}[{clantag.upper()}] is not banned by {league.upper()} {emoji.Checkmark}",
             )
         desc = f"Clan {clanname} got banned by {league.upper()} {emoji.Exclamation}.\n\nInfo from ban list:\n\n"
         for i in range(len(keys)):
@@ -275,10 +275,10 @@ class BanCheckUtility:
             player_ban_list = self.bot.player_ban_list_cwl
         if league == "cwl":
             banned_players = [x for x in player_ban_list["values"] if len(x) > 0]
-            banned_player_tags = [z[0] for z in banned_players if len(z) > 0]
+            banned_player_tags = [z[0].lower() for z in banned_players if len(z) > 0]
         else:
             banned_players = [x for x in player_ban_list["values"] if len(x) > 1]
-            banned_player_tags = [y[1] for y in banned_players if len(y) > 1]
+            banned_player_tags = [y[1].lower() for y in banned_players if len(y) > 1]
         if not playertag in banned_player_tags:
             return [], []
         ind = banned_player_tags.index(playertag)
