@@ -26,7 +26,7 @@ class BanCheckUtility:
                 raise InvalidTag()
             else:
                 return []
-        player_tags = [x["tag"].lower() for x in clan_members]
+        player_tags = [x["tag"].strip().lower() for x in clan_members]
         return player_tags
 
     async def is_clan_banned(self, clantag, league):
@@ -39,10 +39,10 @@ class BanCheckUtility:
             clan_ban_list = self.bot.clan_ban_list_mlcw
         if league == "cwl":
             banned_clans = [x for x in clan_ban_list["values"] if len(x) > 0]
-            banned_clan_tags = [z[0].lower() for z in banned_clans if len(z) > 0]
+            banned_clan_tags = [z[0].strip().lower() for z in banned_clans if len(z) > 0]
         else:
             banned_clans = [x for x in clan_ban_list["values"] if len(x) > 1]
-            banned_clan_tags = [y[1].lower() for y in banned_clans if len(y) > 1]
+            banned_clan_tags = [y[1].strip().lower() for y in banned_clans if len(y) > 1]
         if not clantag in banned_clan_tags:
             return [], []
         ind = banned_clan_tags.index(clantag)
@@ -64,7 +64,7 @@ class BanCheckUtility:
                 raise InvalidTag()
             else:
                 return []
-        player_past_clan_tags = [x.lower() for x in player_clan_history["clansMap"].keys()]
+        player_past_clan_tags = [x.strip().lower() for x in player_clan_history["clansMap"].keys()]
         return player_past_clan_tags
 
     async def get_history_data(self, playertag, clantag):
@@ -80,7 +80,7 @@ class BanCheckUtility:
         for log in logs:
             if "tag" in log:
                 tag = log["tag"]
-                if tag.lower() == clantag.lower():
+                if tag.lower() == clantag.strip().lower():
                     required.append(log)
         return required
 
