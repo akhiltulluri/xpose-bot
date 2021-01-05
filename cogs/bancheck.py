@@ -61,6 +61,8 @@ class BanCheck(commands.Cog):
     @commands.command()
     async def wclcc(self, ctx, clantag):
         """Check if a clan is banned or not according to WCL Ban List"""
+        if not clantag.startswith("#"):
+            clantag = "#" + clantag
         try:
             embed = await self.inst.clanscan(clantag, "wcl")
         except (InvalidTag,commands.BadArgument) as e:
@@ -72,6 +74,8 @@ class BanCheck(commands.Cog):
     @commands.command()
     async def wclps(self, ctx, playertag):
         """Check if a player is banned or not according to WCL Ban list. Also gives information about player visits to clans banned by WCL"""
+        if not playertag.startswith("#"):
+            playertag = "#" + playertag
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "wcl")
         except (InvalidTag,commands.BadArgument) as e:
@@ -87,6 +91,8 @@ class BanCheck(commands.Cog):
     @commands.command()
     async def wclcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to WCL Ban list. Includes info about player visits to clans banned by WCL."""
+        if not clantag.startswith("#"):
+            clantag = "#" + clantag
         await ctx.invoke(self.wclcc, clantag=clantag)
         try:
             clanname = await self.inst.get_clan_name(clantag)
@@ -127,6 +133,8 @@ class MLCWCheck(commands.Cog):
     @commands.command()
     async def mlcwcc(self, ctx, clantag):
         """Check if a clan is banned or not according to MLCW Ban List"""
+        if not clantag.startswith("#"):
+            clantag = "#" + clantag
         try:
             embed = await self.inst.clanscan(clantag, "mlcw")
         except (InvalidTag,commands.BadArgument) as e:
@@ -138,6 +146,8 @@ class MLCWCheck(commands.Cog):
     @commands.command()
     async def mlcwps(self, ctx, playertag):
         """Check if a player is banned or not according to MLCW Ban list. Also gives information about player visits to clans banned by MLCW"""
+        if not playertag.startswith("#"):
+            playertag = "#" + playertag
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "mlcw")
         except (InvalidTag,commands.BadArgument) as e:
@@ -153,6 +163,8 @@ class MLCWCheck(commands.Cog):
     @commands.command()
     async def mlcwcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to MLCW Ban list. Includes info about player visits to clans banned by MLCW."""
+        if not clantag.startswith("#"):
+            clantag = "#" + clantag
         await ctx.invoke(self.mlcwcc, clantag=clantag)
         try:
             clanname = await self.inst.get_clan_name(clantag)
@@ -193,6 +205,8 @@ class CWLCheck(commands.Cog):
     @commands.command()
     async def cwlcc(self, ctx, clantag):
         """Check if a clan is banned or not according to CWL Ban List"""
+        if not clantag.startswith("#"):
+            clantag = "#" + clantag
         try:
             embed = await self.inst.clanscan(clantag, "cwl")
         except (InvalidTag,commands.BadArgument) as e:
@@ -204,6 +218,8 @@ class CWLCheck(commands.Cog):
     @commands.command()
     async def cwlps(self, ctx, playertag):
         """Check if a player is banned or not according to CWL Ban list. Also gives information about player visits to clans banned by CWL"""
+        if not playertag.startswith("#"):
+            playertag = "#" + playertag
         try:
             embed, embed_list = await self.inst.playerscan(playertag, "cwl")
         except (InvalidTag,commands.BadArgument) as e:
@@ -219,6 +235,8 @@ class CWLCheck(commands.Cog):
     @commands.command()
     async def cwlcs(self, ctx, clantag):
         """Run a complete clan scan. This command lets you know if a clan and it's clan members are banned or not according to CWL Ban list. Includes info about player visits to clans banned by CWL."""
+        if not clantag.startswith("#"):
+            clantag = "#" + clantag
         await ctx.invoke(self.cwlcc, clantag=clantag)
         try:
             clanname = await self.inst.get_clan_name(clantag)
