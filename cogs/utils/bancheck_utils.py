@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from dateutil.parser import parse
 import config
+import urllib.parse
 from . import emoji
 
 class InvalidTag(Exception):
@@ -12,7 +13,7 @@ class BanCheckUtility:
         self.bot = bot
 
     async def get_clan_member_tags(self, clantag):
-        clantag = clantag[1:]
+        clantag = urllib.parse.unquote(clantag[1:]).encode('ascii', 'ignore').decode("utf-8")
         try:
             clan_members = await (
             await self.bot.session.get(
@@ -31,6 +32,7 @@ class BanCheckUtility:
 
     async def is_clan_banned(self, clantag, league):
         """A coroutine to check if a clan is banned"""
+        clantag = urllib.parse.unquote(clantag).encode('ascii', 'ignore').decode("utf-8")
         if league == "wcl":
             clan_ban_list = self.bot.clan_ban_list_wcl
         elif league == "cwl":
@@ -50,7 +52,7 @@ class BanCheckUtility:
 
     async def get_player_clan_history_tags(self, playertag):
         """A coroutine to get player clan history"""
-        playertag = playertag[1:]
+        playertag = urllib.parse.unquote(playertag[1:]).encode('ascii', 'ignore').decode("utf-8")
         try:
             player_clan_history = await (
             await self.bot.session.get(
@@ -69,7 +71,7 @@ class BanCheckUtility:
 
     async def get_history_data(self, playertag, clantag):
         """A coroutine to get complete history of a player in a clan"""
-        playertag = playertag[1:]
+        playertag = urllib.parse.unquote(playertag[1:]).encode('ascii', 'ignore').decode("utf-8")
         player_clan_history = await (
             await self.bot.session.get(
                 f"{self.bot.chistory_endpoint}{playertag}/history/clans"
@@ -85,7 +87,7 @@ class BanCheckUtility:
         return required
 
     async def get_clan_name(self, clantag):
-        clantag = clantag[1:]
+        clantag = urllib.parse.unquote(clantag[1:]).encode('ascii', 'ignore').decode("utf-8")
         try:
             resp = await (
             await self.bot.session.get(self.bot.cmembers_endpoint + clantag)
@@ -100,7 +102,7 @@ class BanCheckUtility:
         return resp["name"]
 
     async def get_player_name(self, playertag):
-        playertag = playertag[1:]
+        playertag = urllib.parse.unquote(playertag[1:]).encode('ascii', 'ignore').decode("utf-8")
         try:
             resp = await (
             await self.bot.session.get(self.bot.chistory_endpoint + playertag)
@@ -115,9 +117,9 @@ class BanCheckUtility:
         return resp["name"]
 
     async def playerscan(self, playertag, league, clantag=None):
-        playertag = playertag.strip().lower()
+        playertag = urllib.parse.unquote(playertag.strip().lower()).encode('ascii', 'ignore').decode("utf-8")
         if clantag:
-            clantag = clantag.strip().lower()
+            clantag = urllib.parse.unquote(clantag.strip().lower()).encode('ascii', 'ignore').decode("utf-8")
         playername = await self.get_player_name(playertag)
         keys, vals = await self.is_player_banned(playertag, league)
         past_clans = await self.get_player_clan_history_tags(playertag)
@@ -247,7 +249,7 @@ class BanCheckUtility:
         return list1, list2
 
     async def clanscan(self, clantag, league):
-        clantag = clantag.strip().lower()
+        clantag = urllib.parse.unquote(clantag.strip().lower()).encode('ascii', 'ignore').decode("utf-8")
         keys, vals = await self.is_clan_banned(clantag, league)
         clanname = await self.get_clan_name(clantag)
         if not vals:
@@ -267,6 +269,7 @@ class BanCheckUtility:
 
     async def is_player_banned(self, playertag, league):
         """A coroutine to check if a player is banned"""
+        playertag = urllib.parse.unquote(playertag).encode('ascii', 'ignore').decode("utf-8")
         if league == "wcl":
             player_ban_list = self.bot.player_ban_list_wcl
         elif league == "mlcw":
