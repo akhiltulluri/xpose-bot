@@ -249,7 +249,7 @@ class BanCheckUtility:
         return list1, list2
 
     async def clanscan(self, clantag, league):
-        clantag = urllib.parse.unquote(clantag.strip.lower()).encode('ascii', 'ignore').decode("utf-8")
+        clantag = urllib.parse.unquote(clantag.strip().lower()).encode('ascii', 'ignore').decode("utf-8")
         keys, vals = await self.is_clan_banned(clantag, league)
         clanname = await self.get_clan_name(clantag)
         if not vals:
