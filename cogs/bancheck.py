@@ -14,7 +14,10 @@ SPREADSHEET_REGEX = re.compile(
 
 def remove_unnecessary_stuff(text: str):
     """Removes unnecessary unicode chars and spaces and returns the text"""
-    return text.split()[0].encode('ascii','ignore').decode('utf-8')
+    t = text.split()
+    if len(t) > 0:
+        return t[0].encode('ascii','ignore').decode('utf-8')
+    return text
 
 
 class BanCheck(commands.Cog):
