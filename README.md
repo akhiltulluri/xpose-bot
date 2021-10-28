@@ -64,4 +64,4 @@ To add a ban list of any other league, the only file you would want to edit is `
 Check out the existing league's code to understand how to add a new one
 
 ### Author(s)
-* Akhil
+* Akhil Tulluri
