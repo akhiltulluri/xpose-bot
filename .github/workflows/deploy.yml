@@ -28,4 +28,4 @@ jobs:
         echo TOKEN=${{ secrets.TOKEN }} >> .env
         echo SHEETS_API_KEY=${{ secrets.SHEETS_API_KEY }} >> .env
     - name: Restart the bot
-      run: pm2 restart xposebot
+      run: pm2 restart xpose-bot
